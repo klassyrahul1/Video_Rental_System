@@ -1,4 +1,4 @@
-name: Flask CI
+name: Flask CI (Nobara)
 
 on:
   push:
@@ -10,26 +10,32 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: fedora-latest
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
-      - name: Install Dependencies
+      - name: Install System Dependencies
+        run: |
+          sudo dnf install -y python3-pip python3-devel gcc gcc-c++ make
+
+      - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Set Up Database
+      - name: Set Up Database (if applicable)
+        env:
+          FLASK_APP: app.py
         run: |
-          export FLASK_APP=app.py
-          flask db upgrade || echo "Database setup skipped"
+          flask db upgrade || echo "Database setup skipped (no migrations found)"
 
       - name: Run Tests
-        run: python -m unittest discover
+        run: |
+          python -m unittest discover || exit 1
