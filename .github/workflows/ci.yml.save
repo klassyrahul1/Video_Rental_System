@@ -1,0 +1,34 @@
+name: Flask CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: K%KKK^K         python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set Up Database
+        run: |
+          export FLASK_APP=app.py
+          flask db upgrade || echo "Database setup skipped"
+
+      - name: Run Tests
+        run: python -m unittest discover
