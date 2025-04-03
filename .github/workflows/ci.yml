@@ -21,9 +21,11 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install System Dependencies
+      - name: Install Dependencies
         run: |
-          sudo dnf install -y python3-pip python3-devel gcc gcc-c++ make
+          sudo apt update
+          sudo apt install -y python3-pip python3-dev gcc g++ make
+
 
       - name: Install Python Dependencies
         run: |
