@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Rentals</title>
+  <link rel="stylesheet" href="/static/home_style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+  {% block body %}
+  <header>
+    <div class="header-content">
+      <h1>My Rentals</h1>
+
+      <form action="/search" method="POST" class="search-form">
+        <div class="search">
+          <input type="text" name="inp" placeholder="Search movie by name..." aria-label="Search movies">
+          <button type="submit">Search</button>
+        </div>
+      </form>
+
+      <div class="dropdown">
+        <button class="dropdown-item">Menu &#9662;</button>
+        <div class="dropdown-content">
+          <a href={{url_for('home_page')}}>Home</a>
+          <a href={{url_for('login_user')}}>Logout</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="balance-card">
+      <div class="balance-info">
+        <span class="balance-label">Current Balance:</span>
+        <span class="balance-amount">{{ balance }}</span>
+      </div>
+      <button class="btn btn-success add-credit-btn"><i class="fas fa-plus-circle"></i> Add Credit</button>
+    </div>
+
+    {% if has_messages %}
+    <div class="message-notification">
+      You have new messages from our staff!
+      <a href="{{ url_for('view_messages') }}" class="message-link">View Messages</a>
+    </div>
+    {% endif %}
+
+    <div class="movie-list">
+      {% for i in range(0, length) %}
+      <div class="movie-card" data-title="{{ titles[i] }}">
+        <div class="movie-card-content">
+          <div class="movie-info">
+            <div class="movie-title">{{ titles[i] }}</div>
+            <div class="movie-dates">
+              <div><i class="fas fa-calendar-check"></i> Rented: {{ borrow_date[i].strftime('%Y-%m-%d') }}</div>
+              {% if deadline[i] < now %} <div class="overdue"><i class="fas fa-calendar-times"></i> <span
+                  class="text-danger">Return by: {{ deadline[i].strftime('%Y-%m-%d') }} (OVERDUE)</span>
+            </div>
+            {% else %}
+            <div><i class="fas fa-calendar-times"></i> Return by: {{ deadline[i].strftime('%Y-%m-%d') }}</div>
+            {% endif %}
+            <form action="{{ url_for('handle_return_movie') }}" method="POST" style="display: inline;">
+              <input type="hidden" name="order_id" value="{{ id[i] }}">
+              <button type="submit" class="btn btn-primary">Return Movie</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if length == 0 %}
+  <div class="no-rentals">
+    <i class="fas fa-film fa-3x"></i>
+    <p>You don't have any active rentals.</p>
+  </div>
+  {% endif %}
+  </div>
+
+  <div id="addCreditModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Add Credit to Your Account</h2>
+      <form id="creditForm" action="{{ url_for('add_credit') }}" method="post">
+        <div class="form-group">
+          <label for="creditAmount">Amount to Add:</label>
+          <input type="number" id="creditAmount" name="amount" min="0" step="100" required>
+        </div>
+        <button type="submit" class="btn btn-success">Add Credit</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('searchRentals') && document.getElementById('searchRentals').addEventListener('input', function () {
+      const searchTerm = this.value.toLowerCase();
+      document.querySelectorAll('.movie-card').forEach(card => {
+        const title = card.dataset.title.toLowerCase();
+        if (title.includes(searchTerm)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+
+    // Sorting functionality
+    document.getElementById('sortRentals') && document.getElementById('sortRentals').addEventListener('change', function () {
+      const sortValue = this.value;
+      const movieList = document.querySelector('.movie-list');
+      const movieCards = Array.from(document.querySelectorAll('.movie-card'));
+
+      // Sorting logic would be implemented here
+      // For now, this is just a placeholder for the feature
+
+      // Clear and re-append in new order
+      movieList.innerHTML = '';
+      movieCards.forEach(card => {
+        movieList.appendChild(card);
+      });
+    });
+
+    // Modal functionality
+    const modal = document.getElementById("addCreditModal");
+    const btn = document.querySelector(".add-credit-btn");
+    const span = document.querySelector(".close");
+
+    btn.addEventListener("click", function () {
+      modal.style.display = "block";
+    });
+
+    span.addEventListener("click", function () {
+      modal.style.display = "none";
+    });
+
+    window.addEventListener("click", function (event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    });
+
+    // Dropdown menu functionality
+    document.addEventListener('DOMContentLoaded', function () {
+      const dropdown = document.querySelector('.dropdown');
+      const dropdownButton = document.querySelector('.dropdown-item');
+
+      dropdownButton.addEventListener('click', function (event) {
+        event.stopPropagation();
+        dropdown.classList.toggle('active');
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function (event) {
+        if (!dropdown.contains(event.target)) {
+          dropdown.classList.remove('active');
+        }
+      });
+
+      // Prevent dropdown from closing when clicking inside
+      const dropdownContent = document.querySelector('.dropdown-content');
+      dropdownContent.addEventListener('click', function (event) {
+        event.stopPropagation();
+      });
+    });
+  </script>
+  {% endblock %}
+</body>
+
+</html>

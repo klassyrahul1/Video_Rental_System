@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies - Search Results</title>
+    <link rel="stylesheet" href="/static/home_style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Messages for {{ user }}</h1>
+
+        <div class="message-list">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="message">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% else %}
+            <p class="no-messages">You have no messages.</p>
+            {% endif %}
+        </div>
+
+        <div class="actions">
+            <a href="{{ url_for('home_page') }}" class="button">Back to Home</a>
+        </div>
+    </div>
+</body>
+
+</html>

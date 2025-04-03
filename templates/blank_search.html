@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movies - No Results</title>
+  <link rel="stylesheet" href="/static/home_style.css">
+</head>
+{% block body %}
+
+<body>
+  <header>
+    <div class="header-content">
+      <h1>Movie Rental Service</h1>
+      <div class="nav-controls">
+        <div class="dropdown">
+          <button class="dropdown-item">Menu &#9662;</button>
+          <div class="dropdown-content">
+            <a href={{url_for('customer')}}>My Orders</a>
+            <a href={{url_for('home_page')}}>Home</a>
+            <a href={{url_for('login_user')}}>Logout</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="search-form">
+        <form action="/search" method="POST" class="search">
+          <input type="text" name="inp" placeholder="Search movie by name..." value="{{input}}">
+          <button type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <div class="movie-grid">
+    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+      <h2 style="color: white;">No movies found for "{{input}}"</h2>
+      <p style="color: white;">Try a different search term </p>
+
+    </div>
+  </div>
+
+
+  </div>
+  <div style="max-width: 1200px; margin: 1rem auto; padding: 0 1rem;">
+    <h2 style="color: white;">Recently viewed movies</h2>
+
+  </div>
+  <div class="movie-grid">
+
+
+    {% if recently_viewed and recently_viewed|length > 0 %}
+    {% for movie in recently_viewed %}
+    <div class="movie-card">
+      <a href="{{url_for('rent', title=movie.title)}}">
+        <img src="{{ movie.poster_path }}"
+          alt="https://www.google.com/imgres?q=poster%20not%20present&imgurl=https%3A%2F%2Ftheposterdb.com%2Fimages%2Fdefaults%2Fmissing_poster.jpg&imgrefurl=https%3A%2F%2Ftheposterdb.com%2Frules&docid=CM70jXJi8z18HM&tbnid=fr56LN8uaFiy5M&vet=12ahUKEwjXz7v0loqMAxULefUHHY1yKnQQM3oECBcQAA..i&w=2000&h=3000&hcb=2&ved=2ahUKEwjXz7v0loqMAxULefUHHY1yKnQQM3oECBcQAA"
+          width="150" height="225">
+      </a>
+      <div class="movie-title">{{ movie.title }}</div>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endblock %}
+
+  </div>
+</body>
+
+</html>

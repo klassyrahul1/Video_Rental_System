@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="/static/login_style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+</head>
+
+<body>
+  <div class="login-container">
+    <h1 id="popcorn-picks">Popcorn Picks</h1>
+    <form action="/login_staff" method="POST">
+      <h2>Login (Staff)</h2>
+
+      {% if warn=="y" %}
+      <h4 class="warning">Invalid Credentials</h4>
+      {% endif %}
+
+      <input type="text" id="username" name="username" placeholder="Username" required>
+
+      <div class="password-container">
+        <input type="password" id="password" name="password" placeholder="Password" required>
+        <i class="far fa-eye" id="togglePassword" onclick="togglePassword()"></i>
+      </div>
+
+      <input type="submit" value="Log in">
+
+    </form>
+
+
+    <div class="link-container">
+      <a href="{{ url_for('login_user') }}">User</a> |
+      <a href="{{ url_for('login_manager') }}">Manager</a> |
+      <a href="{{ url_for('create_acc') }}">Create account</a>
+    </div>
+  </div>
+
+  <script>
+    function togglePassword() {
+      var passwordField = document.getElementById("password");
+      var eyeIcon = document.getElementById("togglePassword");
+
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+        eyeIcon.classList.remove('fa-eye');
+        eyeIcon.classList.add('fa-eye-slash');
+      } else {
+        passwordField.type = "password";
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.classList.add('fa-eye');
+      }
+    }
+
+  </script>
+</body>
+
+</html>

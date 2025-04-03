@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Browser</title>
+    <link rel="stylesheet" href="/static/home_style.css">
+    <style>
+      
+    </style>
+  </head>
+  {% block body %}
+  <body>
+    <header>
+      <div class="header-content">
+        <h1>Welcome  {{user}}</h1>
+
+        <form action="/search" method="POST" class="search-form">
+          <div class="search">
+            <input type="text" name="inp" placeholder="Search movie by name..." aria-label="Search movies">
+            <button type="submit">Search</button>
+          </div>
+        </form>
+
+        <div class="nav-controls">
+          <div class="dropdown">
+            <button class="dropdown-item">Menu &#9662;</button>
+            <div class="dropdown-content">
+              <a href={{url_for('customer')}}>My Orders</a>
+              <a href={{url_for('login_user')}}>Logout</a>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </header>
+  
+    <main>
+      <div class="genre-filter">
+        <form action="/filter_genre" method="POST">
+          <select name="genre" id="genre-select">
+            {% for genre in all_genres %}
+              <option value="{{ genre }}" {% if selected_genre == genre %}selected{% endif %}>{{ genre }}</option>
+            {% endfor %}
+          </select>
+          <button type="submit">Filter</button>
+        </form>
+      </div>
+      
+      <div class="movie-grid">
+        {% for i in range(0, length) %}
+          <div class="movie-card">
+            <a href={{url_for('rent', title=movie_titles[i])}}>
+              <img src="{{ movie_links[i] }}" alt="https://www.google.com/imgres?q=poster%20not%20present&imgurl=https%3A%2F%2Ftheposterdb.com%2Fimages%2Fdefaults%2Fmissing_poster.jpg&imgrefurl=https%3A%2F%2Ftheposterdb.com%2Frules&docid=CM70jXJi8z18HM&tbnid=fr56LN8uaFiy5M&vet=12ahUKEwjXz7v0loqMAxULefUHHY1yKnQQM3oECBcQAA..i&w=2000&h=3000&hcb=2&ved=2ahUKEwjXz7v0loqMAxULefUHHY1yKnQQM3oECBcQAA" width="150" height="225">
+            </a>
+            <h2 class="movie-title">{{ movie_titles[i] }}</h2>
+            {% if movie_genres and movie_genres[i] %}
+              <p class="movie-genre">{{ movie_genres[i] }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </main>
+  </body>
+  {% endblock %}
+</html>

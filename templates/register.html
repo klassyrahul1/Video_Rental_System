@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="stylesheet" href="/static/login_style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+</head>
+
+<body>
+  {% if warn=="y" %}
+  <h4 style="background-color: rgb(255, 187, 0); padding: 5px; text-align: center; color: #FFFFFF; border-radius: 5px;">
+    The passwords don't match</h4>
+  {% endif %}
+  <div class="register-container">
+    <h1 id="popcorn-picks">Popcorn Picks</h1>
+    <form action="/register" method="POST">
+      <h2>Join Us Today - Sign Up and Get Started!</h2>
+
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Choose a username for your profile" required>
+
+      <p>Select your role</p>
+      <div class="radio-group">
+        <input type="radio" id="User" name="role" value="User" checked>
+        <label for="User">User</label>
+
+        <input type="radio" id="Staff" name="role" value="Staff">
+        <label for="Staff">Staff</label>
+      </div>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email" required
+        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+
+      <!-- Password Field -->
+      <label for="password">Password</label>
+      <div class="password-container">
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        <i class="far fa-eye" id="togglePassword" onclick="togglePassword('password', 'togglePassword')"></i>
+      </div>
+
+      <!-- Confirm Password Field -->
+      <label for="confirm-password">Confirm Password</label>
+      <div class="password-container">
+        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password"
+          required>
+        <i class="far fa-eye" id="toggleConfirmPassword"
+          onclick="togglePassword('confirm-password', 'toggleConfirmPassword')"></i>
+      </div>
+
+      <input type="submit" value="Sign Up">
+      <div class="link-container">
+        <a href="{{ url_for('login_user') }}">User</a> |
+        <a href="{{ url_for('login_staff') }}">Staff</a> |
+        <a href="{{ url_for('login_manager') }}">Manager</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function togglePassword() {
+      var passwordField = document.getElementById("password");
+      var eyeIcon = document.getElementById("togglePassword");
+
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+        eyeIcon.classList.remove('fa-eye');
+        eyeIcon.classList.add('fa-eye-slash');
+      } else {
+        passwordField.type = "password";
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.classList.add('fa-eye');
+      }
+    }
+
+  </script>
+</body>
+
+</html>
