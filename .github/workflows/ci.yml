@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: fedora-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
