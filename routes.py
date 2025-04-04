@@ -355,15 +355,20 @@ def customer():
     
 @app.route('/search', methods=['GET', 'POST'])
 def search():
+    # Check if user is logged in
     if 'username' not in session:
         return redirect(url_for('login_user'))
     
     username = session['username']
+    
+    # Get current user
     user_obj = User.query.filter_by(name=username).first()
     
+    # Initialize recently viewed in session if not present
     if 'recently_viewed' not in session:
         session['recently_viewed'] = []
         
+        # If user has a last movie viewed, add it to session
         if user_obj and user_obj.lastmovie:
             last_movie = Movie.query.filter_by(title=user_obj.lastmovie).first()
             if last_movie:
@@ -376,8 +381,10 @@ def search():
     if request.method == 'POST':
         inp = request.form.get('inp', '')
         result = search_movies(inp)
-        recently_viewed = session.get('recently_viewed', [])
 
+        # Get recently viewed movies for this user
+        recently_viewed = session.get('recently_viewed', [])
+        
         if result is None:
             return render_template('blank_search.html', input=inp, movie_links=inp, user=username, recently_viewed=recently_viewed)
         
@@ -390,12 +397,25 @@ def search():
             movie_links = [result.poster_path]
             movie_titles = [result.title]
             length = 1
-            return render_template('search.html', input=inp, movie_links=movie_links, movie_titles=movie_titles, length=length, user=username, recently_viewed=recently_viewed)
+        
+        # Render the search results page
+        return render_template('search.html', 
+                              input=inp, 
+                              movie_links=movie_links,
+                              movie_titles=movie_titles, 
+                              length=length, 
+                              user=username,
+                              recently_viewed=recently_viewed)
     
+    # Get recently viewed movies for this user
     recently_viewed = session.get('recently_viewed', [])
     
-    return render_template('search.html', input="", movie_links=[], length=0, user=username,recently_viewed=recently_viewed)
-
+    return render_template('search.html', 
+                          input="", 
+                          movie_links=[], 
+                          length=0, 
+                          user=username,
+                          recently_viewed=recently_viewed)
 
 @app.route('/rent/<title>', methods=['POST', 'GET'])
 def rent(title):
